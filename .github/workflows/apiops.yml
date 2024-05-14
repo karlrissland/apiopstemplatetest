@@ -58,6 +58,8 @@ jobs:
           # Connect to Azure with the service principal
           Connect-AzAccount -ServicePrincipal -Credential $credential -Tenant '${{env.SP_TENANT}}'
 
-          pwsh -File ${{ GITHUB.WORKSPACE }}/src/apis/apiops.ps1 -resourceGroup "${{env.RESOURCE_GROUP}}" -apimServiceName "${{env.APIM_SERVICE_NAME}}" -subscriptionId "${{env.SUBSCRIPTION_ID}}" -restApiVersion "${{env.REST_API_VERSION}}" -scriptFunction "Deploy"
+          Set-Location -Path ${{ GITHUB.WORKSPACE }}/src/apis
+
+          pwsh -File apiops.ps1 -resourceGroup "${{env.RESOURCE_GROUP}}" -apimServiceName "${{env.APIM_SERVICE_NAME}}" -subscriptionId "${{env.SUBSCRIPTION_ID}}" -restApiVersion "${{env.REST_API_VERSION}}" -scriptFunction "Deploy"
           
         shell: pwsh
