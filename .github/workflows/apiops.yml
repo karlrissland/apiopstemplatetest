@@ -21,7 +21,7 @@ jobs:
   # This workflow contains a single job called "build"
   deploy-apis:
     runs-on: ubuntu-latest
-    environment: ${{inputs.environment}}
+    environment: dev
 
     env:
       SP_APPID: ${{secrets.APPID}}
