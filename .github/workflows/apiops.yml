@@ -50,11 +50,8 @@ jobs:
           # Connect to Azure with the service principal
           Connect-AzAccount -ServicePrincipal -Credential $credential -Tenant '${{env.SP_TENANT}}'
 
-          # Get the access token
-          $context = Get-AzContext
-          $profile = [Microsoft.Azure.Commands.Common.Authentication.Abstractions.AzureRmProfileProvider]::Instance.Profile
-          $profileClient = New-Object -TypeName Microsoft.Azure.Commands.ResourceManager.Common.RMProfileClient -ArgumentList ($profile)
-          $token = $profileClient.AcquireAccessToken($context.Subscription.TenantId)
-          $accessToken = $token.AccessToken
+          pwsh -File ${{ GITHUB.WORKSPACE }}/src/apis/apiops.ps1 -resourceGroup "proxypatpoc-ateg4pu-templatedemo" -apimServiceName "apim-ateg4pu" -subscriptionId "1680f467-523b-453d-9cc0-59ab9a7052b8" -restApiVersion "2023-05-01-preview" -scriptFunction "Deploy"
+
+          # pwsh -File .\apiops.ps1 -resourceGroup "proxypatpoc-ateg4pu-templatedemo" -apimServiceName "apim-ateg4pu" -subscriptionId "1680f467-523b-453d-9cc0-59ab9a7052b8" -workspaceName "test" -restApiVersion "2023-05-01-preview" -scriptFunction "Deploy"
           
         shell: pwsh
