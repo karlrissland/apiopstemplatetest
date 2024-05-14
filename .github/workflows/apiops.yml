@@ -34,6 +34,7 @@ jobs:
       # Runs a single command using the runners shell
       - name: Set PSCredential Object
         run: |
+          Write-Host ${{vars.env}}
           $securePassword = ConvertTo-SecureString -String ${{env.SP_PASSWORD}} -AsPlainText -Force
           $credential = New-Object - TypeName System.Management.Automation.PSCredential -ArgumentList ${{env.SP_APPID}}, $securePassword
           Connect-AzAccount -ServicePrincipal -Credential $credential -Tenant ${{env.SP_TENANT}}
