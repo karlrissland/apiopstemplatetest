@@ -500,8 +500,11 @@ function updateApi {
             $response = Invoke-RestMethod -Method Delete -Uri ($url + $qs) -Headers $headers
         }
     }
-  
 
+    linkApiToTags -apiName $apiName
+
+    linkApiToProducts -apiName $apiName
+  
 }
 
 function deployAPIs{
