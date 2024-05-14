@@ -39,6 +39,8 @@ jobs:
           Write-Host "pass: ${{env.SP_PASSWORD}}"
           Write-Host "tenant: ${{env.SP_TENANT}}"
 
+          Install-Module -Name Az.Accounts -Scope CurrentUser
+
           Import-Module Az.Accounts
 
           # Create a PSCredential object with the service principal's app id (client id) and secret
