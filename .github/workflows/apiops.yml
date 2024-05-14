@@ -39,6 +39,8 @@ jobs:
           Write-Host "pass: ${{env.SP_PASSWORD}}"
           Write-Host "tenant: ${{env.SP_TENANT}}"
 
+          Import-Module Az.Accounts
+
           # Create a PSCredential object with the service principal's app id (client id) and secret
           $securePassword = ConvertTo-SecureString -String '${{env.SP_PASSWORD}}' -AsPlainText -Force
           $credential = New-Object -TypeName System.Management.Automation.PSCredential -ArgumentList '${{env.SP_APPID}}', $securePassword
