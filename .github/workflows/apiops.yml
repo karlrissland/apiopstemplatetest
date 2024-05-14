@@ -27,6 +27,10 @@ jobs:
       SP_APPID: ${{secrets.APPID}}
       SP_PASSWORD: ${{secrets.PASSWORD}}
       SP_TENANT: ${{secrets.TENANT}}
+      APIM_SERVICE_NAME: ${{vars.APIM_SERVICE_NAME}}
+      RESOURCE_GROUP: ${{vars.RESOURCE_GROUP}}
+      REST_API_VERSION: ${{vars.REST_API_VERSION}}
+      SUBSCRIPTION_ID: ${{vars.SUBSCRIPTION_ID}}
 
     steps:
       - uses: actions/checkout@v4
@@ -38,6 +42,10 @@ jobs:
           Write-Host "appid: ${{env.SP_APPID}}"
           Write-Host "pass: ${{env.SP_PASSWORD}}"
           Write-Host "tenant: ${{env.SP_TENANT}}"
+          Write-Host "resource group: ${{env.RESOURCE_GROUP}}"
+          Write-Host "subscription id: ${{env.SUBSCRIPTION_ID}}"
+          Write-Host "rest api version: ${{env.REST_API_VERSION}}"
+          Write-Host "apim service name: ${{env.APIM_SERVICE_NAME}}"
 
           Install-Module -Name Az.Accounts -Scope CurrentUser -Force
 
@@ -50,8 +58,6 @@ jobs:
           # Connect to Azure with the service principal
           Connect-AzAccount -ServicePrincipal -Credential $credential -Tenant '${{env.SP_TENANT}}'
 
-          pwsh -File ${{ GITHUB.WORKSPACE }}/src/apis/apiops.ps1 -resourceGroup "proxypatpoc-ateg4pu-templatedemo" -apimServiceName "apim-ateg4pu" -subscriptionId "1680f467-523b-453d-9cc0-59ab9a7052b8" -restApiVersion "2023-05-01-preview" -scriptFunction "Deploy"
-
-          # pwsh -File .\apiops.ps1 -resourceGroup "proxypatpoc-ateg4pu-templatedemo" -apimServiceName "apim-ateg4pu" -subscriptionId "1680f467-523b-453d-9cc0-59ab9a7052b8" -workspaceName "test" -restApiVersion "2023-05-01-preview" -scriptFunction "Deploy"
+          pwsh -File ${{ GITHUB.WORKSPACE }}/src/apis/apiops.ps1 -resourceGroup "${{env.RESOURCE_GROUP}}" -apimServiceName "${{env.APIM_SERVICE_NAME}}" -subscriptionId "${{env.SUBSCRIPTION_ID}}" -restApiVersion "${{env.REST_API_VERSION}}" -scriptFunction "Deploy"
           
         shell: pwsh
