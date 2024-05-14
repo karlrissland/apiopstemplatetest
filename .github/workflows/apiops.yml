@@ -1,5 +1,3 @@
-# This is a basic workflow to help you get started with Actions
-
 name: ApiOpsDeploy
 
 # Controls when the workflow will run
@@ -11,13 +9,17 @@ on:
         description: 'environment to deploy to'
         required: true
         type: environment
-        
 
-# A workflow run is made up of one or more jobs that can run sequentially or in parallel
+permissions:
+  id-token: write
+  contents: write
+
+env:
+  RUNNER_DEBUG: 1
+
 jobs:
   # This workflow contains a single job called "build"
-  deploy:
-    # The type of runner that the job will run on
+  deploy-apis:
     runs-on: ubuntu-latest
     environment: ${{inputs.environment}}
 
@@ -26,12 +28,9 @@ jobs:
       SP_PASSWORD: ${{secrets.PASSWORD}}
       SP_TENANT: ${{secrets.TENANT}}
 
-    # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
-      # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
       - uses: actions/checkout@v4
 
-      # Runs a single command using the runners shell
       - name: Set PSCredential Object
         run: |
           Write-Host "input: ${{inputs.environment}}"
