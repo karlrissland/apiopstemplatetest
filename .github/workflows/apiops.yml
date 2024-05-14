@@ -35,4 +35,5 @@ jobs:
         run: |
           Write-Host "input: ${{inputs.environment}}"
           Write-Host "environment: ${{vars.env}}"
+          Write-Host "appid: ${{SP_APPID}}"
         shell: pwsh
