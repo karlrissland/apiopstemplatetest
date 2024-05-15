@@ -1,7 +1,7 @@
 [
   {
-    "api-path": "mynewapipath",
-    "folder-name": "My-New-API",
-    "api-name": "mynewapi"
+    "api-path": "",
+    "folder-name": "portalfirstapi",
+    "api-name": "demo-conference-api"
   }
 ]
