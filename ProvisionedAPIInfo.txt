@@ -2,7 +2,7 @@ Information about your provisioned API Management Service and API
 -----------------------------------------------------------------
 Resource Group Name: proxypatpoc-ateg4pu-templatedemo
 API Management Service Name: apim-ateg4pu
-Workspace Name: 
-API Name: srvapi1
-API Path: srvapi1path
-API Title: service level api
+Workspace Name: devteam1
+API Name: demoapi
+API Path: demoapipath
+API Title: demo api title
