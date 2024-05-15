@@ -1,7 +1,7 @@
 [
     {
-        "api-name": "demo-conference-api",
+        "api-name": "demoapi",
         "folder-name": "demo-conference-api",
-        "api-path": "demo"
+        "api-path": "demoapipath"
       }
 ]
