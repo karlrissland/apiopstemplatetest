@@ -32,7 +32,6 @@ jobs:
       REST_API_VERSION: ${{vars.REST_API_VERSION}}
       SUBSCRIPTION_ID: ${{vars.SUBSCRIPTION_ID}}
       API_LIST_JSON: ${{vars.API_LIST_JSON}}
-      GH_REPO_ID: ${{vars.GH_REPO_ID}}
 
     steps:
       - uses: actions/checkout@v4
@@ -62,11 +61,11 @@ jobs:
 
           Set-Location -Path ${{ GITHUB.WORKSPACE }}/src/apis
 
-          $output = pwsh -File apiops.ps1 -resourceGroup "${{env.RESOURCE_GROUP}}" -subscriptionId "${{env.SUBSCRIPTION_ID}}" -apimServiceName "${{env.APIM_SERVICE_NAME}}" -restApiVersion "${{env.REST_API_VERSION}}" -scriptFunction "Deploy" -apilistjsonparam '${{env.API_LIST_JSON}}'
+          pwsh -File apiops.ps1 -resourceGroup "${{env.RESOURCE_GROUP}}" -subscriptionId "${{env.SUBSCRIPTION_ID}}" -apimServiceName "${{env.APIM_SERVICE_NAME}}" -restApiVersion "${{env.REST_API_VERSION}}" -scriptFunction "Deploy" -apilistjsonparam '${{env.API_LIST_JSON}}'
           
-          Write-Host "output: $output"
+          $apilist = Get-Content -Path "./api-list.json" -Raw
 
-          gh api --method PATCH  /repositories/${{ github.repository_id }}/environments/${{ inputs.environment }}/variables/API_LIST_JSON -f name='API_LIST_JSON' -f value=$output
+          gh api --method PATCH  /repositories/${{ github.repository_id }}/environments/${{ inputs.environment }}/variables/API_LIST_JSON -f name='API_LIST_JSON' -f value=$apilist
         shell: pwsh
         env:
           GH_TOKEN: ${{secrets.GH_PAT}}

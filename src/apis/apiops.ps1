@@ -694,12 +694,12 @@ if($scriptFunction -eq "Deploy"){
     Write-Host "Invalid script function"
 }
 
-if ($apilistjsonparam -eq $null -or $apilistjsonparam -eq "") {
+# if ($apilistjsonparam -eq $null -or $apilistjsonparam -eq "") {
     Write-Host "Updating api-list.json"
     $apilist | ConvertTo-Json -AsArray | Set-Content -Path "./api-list.json"
-} else {
-    Write-Host "api-list json can be found in the output variable"
-    $output = $apilist | ConvertTo-Json -AsArray
-    Write-Host "Output: $output"
-    Write-Output $output
-}
+# } else {
+#     Write-Host "api-list json can be found in the output variable"
+#     $output = $apilist | ConvertTo-Json -AsArray
+#     Write-Host "Output: $output"
+#     Write-Output $output
+# }

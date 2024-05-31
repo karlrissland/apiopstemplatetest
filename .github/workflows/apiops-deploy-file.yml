@@ -38,7 +38,6 @@ jobs:
       - name: Set PSCredential Object
         run: |
           Write-Host "input: ${{inputs.environment}}"
-          Write-Host "environment: ${{vars.env}}"
           Write-Host "appid: ${{env.SP_APPID}}"
           Write-Host "pass: ${{env.SP_PASSWORD}}"
           Write-Host "tenant: ${{env.SP_TENANT}}"
