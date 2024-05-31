@@ -28,6 +28,8 @@ function getApiExport {
         [string]$folderName
     )
 
+    write-host "---------------------------Getting API Export for $apiName"
+
     switch ($definitionFormat) {
         "swagger-json" {
             $fileName = "swagger.json"
@@ -79,6 +81,8 @@ function getApiPolicy{
         [string]$folderName
     )
 
+    write-host "----------------------------Getting API Policy for $apiName"
+
     $headers = @{
         'Authorization' = "Bearer $accessToken"
     }
@@ -106,6 +110,8 @@ function getApiOperations{
         [string]$apiName
     )
 
+    write-host "----------------------------Getting API Operations for $apiName"
+
     $headers = @{
         'Authorization' = "Bearer $accessToken"
     }
@@ -130,6 +136,8 @@ function getOperationPolicys{
         [string]$apiName,
         [string]$folderName
     )
+
+    write-host "----------------------------Getting Operation Policies for $apiName"
 
     $operationNames = getApiOperations -apiName $apiName
 
@@ -163,6 +171,8 @@ function putApiImportCreateUpdate{
         [string]$definitionFormat,
         [string]$apiPath
     )
+
+    write-host "----------------------------Putting API Import CreateUpdate for $apiName"
 
     # Determine what type of definition file we are working with
     switch ($definitionFormat) {
@@ -204,6 +214,8 @@ function putApiPolicyCreateUpdate{
         [string]$folderName
     )
 
+    write-host "----------------------------Putting API Policy CreateUpdate for $apiName"
+
     $contents = Get-Content -Path "./$folderName/policy.xml" -Raw
 
     $contents = $contents -replace "`r`n", ""
@@ -235,6 +247,8 @@ function putApiOperationPolicyCreateUpdate{
         [string]$operationName
     )
 
+    write-host "----------------------------Putting Operation Policy CreateUpdate for $apiName"
+
     $contents = Get-Content -Path "./$folderName/$operationName-policy.xml" -Raw
 
     $contents = $contents -replace "`r`n", ""
@@ -261,7 +275,7 @@ function removeApiFromList {
         [object]$apilist
     )
 
-    Write-Host "        Removing API from list: $apiFolder"
+    write-host "----------------------------Removing API from list for folder $apiFolder"
 
     # Convert the JSON to a PowerShell object
     $jsonObject = @(Get-Content -Path "./api-list.json" -Raw | ConvertFrom-Json)
@@ -285,7 +299,8 @@ function addApiToList {
         [object]$apilist
     )
 
-    Write-Host "        Adding API to list: $apiFolder"
+    write-host "----------------------------Adding API to list for folder $apiFolder"
+
     # $apiName = getApiNameFromParams($apiFolder)
     ## Add the API to the api-list.json file
 
@@ -314,6 +329,8 @@ function getApiInfoFromFile {
         [object]$apilist
     )
 
+    write-host "----------------------------Getting API Info from file for folder $apiFolder"
+
     # Convert the JSON to a PowerShell object
     #$jsonObject = Get-Content -Path "./api-list.json" -Raw | ConvertFrom-Json
     $jsonObject = $apilist
@@ -330,6 +347,8 @@ function deleteApi {
         [string]$apiFolder,
         [object]$apilist
     )
+
+    write-host "----------------------------Deleting API for folder $apiFolder"
 
     #Get API Info from api-list.json
     $apiInfo = getApiInfoFromFile -apiFolder $apiFolder -apilist $apilist
@@ -357,6 +376,8 @@ function linkApiToProducts{
     param(
         [string]$apiName
     )
+
+    write-host "----------------------------Linking API to Products for $apiName"
 
     $headers = @{
         'Authorization' = "Bearer $accessToken"
@@ -402,6 +423,8 @@ function linkApiToTags{
         [string]$apiName
     )
 
+    write-host "----------------------------Linking API to Tags for $apiName"
+
     $headers = @{
         'Authorization' = "Bearer $accessToken"
         'Content-Type' = 'application/json'
@@ -445,6 +468,8 @@ function createApi {
         [string]$apiFolder,
         [object]$apilist
     )
+
+    write-host "----------------------------Creating API for folder $apiFolder"
 
     # Scenario
     # API Folder Exists but API does not exist in api-list.json
@@ -495,6 +520,8 @@ function updateApi {
     param(
         [string]$apiFolder
     )
+
+    write-host "----------------------------Updating API for folder $apiFolder"
 
     $apiInfo = getApiInfoFromFile -apiFolder $apiFolder -apilist $apilist
     $apiName = $apiInfo.'api-name'
@@ -554,6 +581,8 @@ function deployAPIs{
         [object]$apilist
     )
 
+    write-host "----------------------------Deploying APIs"
+
     # Compare the list of APIs in the api-list.json file to the directories in the file system
     $differences = Compare-Object -ReferenceObject $apiListDirNames -DifferenceObject $filesysDirNames
 
@@ -583,6 +612,8 @@ function extractAPIs{
     param(
         [object]$apilist
     )
+
+    write-host "----------------------------Extracting APIs"
     # Will extract APIs listed in api-list.json, must have the apiId correct and a folder name defined
 
     # Read the api-list.json file
