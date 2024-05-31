@@ -116,7 +116,7 @@ function getApiOperations{
     $url = "https://management.azure.com/subscriptions/$subscriptionId/resourceGroups/$resourceGroup/providers/Microsoft.ApiManagement/service/$apimServiceName/$($workspaceUrlPart)apis/$apiName/operations"
     $qs = "?api-version=$restApiVersion"
 
-    $null = Invoke-RestMethod -Method Get -Uri ($url + $qs) -Headers $headers
+    $response = Invoke-RestMethod -Method Get -Uri ($url + $qs) -Headers $headers
 
     $operationNames = @()
     foreach ($operation in $response.value) {
