@@ -47,6 +47,7 @@ jobs:
           Write-Host "subscription id: ${{env.SUBSCRIPTION_ID}}"
           Write-Host "rest api version: ${{env.REST_API_VERSION}}"
           Write-Host "apim service name: ${{env.APIM_SERVICE_NAME}}"
+          Write-Host "api list json: ${{env.API_LIST_JSON}}"
 
           Install-Module -Name Az.Accounts -Scope CurrentUser -Force
 
