@@ -553,7 +553,7 @@ function extractAPIs{
         # Extract the definition file into the folder
         $apiPath = getApiExport -apiName $apiName -definitionFormat "swagger-json" -folderName $folderName 
 
-        # Update the path statement in aapiList make sure to remove the leading / from the path
+        # Update the path statement in apiList make sure to remove the leading / from the path
         if ([string]::IsNullOrEmpty($apiPath)) {
             $apiList[$index].'api-path' = ""
         } else {
@@ -566,6 +566,12 @@ function extractAPIs{
         # Extract the operation policy files into the folder
         getOperationPolicys -apiName $apiName -folderName $folderName 
         $index++
+
+        # Associate API with products - dev may not have done this when doing portal first development
+        linkApiToProducts -apiName $apiName
+
+        # Associate API with tags - dev may not have done this when doing portal first development
+        linkApiToTags -apiName $apiName
     }
 
     # Update the path statements in the api-list.json file

@@ -1,11 +1,12 @@
 {
   "swagger": "2.0",
   "info": {
-    "title": "Demo Conference API",
+    "title": "Demo Conference API 2",
     "version": "1.0",
     "description": "A sample API with information related to a technical conference.  The available resources  include *Speakers*, *Sessions* and *Topics*.  A single write operation is available to provide  feedback on a session."
   },
-  "host": "apim-ateg4pu.azure-api.net",
+  "host": "apim-onn4wud-dev.azure-api.net",
+  "basePath": "/team1api2path",
   "schemes": [
     "http",
     "https"
@@ -150,6 +151,7 @@
     },
     "/speakers": {
       "get": {
+        "description": "GetSpeakers",
         "operationId": "GetSpeakers",
         "summary": "GetSpeakers",
         "parameters": [
@@ -177,6 +179,7 @@
     },
     "/speaker/{id}": {
       "get": {
+        "description": "GetSpeaker",
         "operationId": "GetSpeaker",
         "summary": "GetSpeaker",
         "parameters": [
@@ -201,6 +204,7 @@
     },
     "/speaker/{id}/sessions": {
       "get": {
+        "description": "GetSpeakerSessions",
         "operationId": "GetSpeakerSessions",
         "summary": "GetSpeakerSessions",
         "parameters": [
@@ -224,6 +228,7 @@
     },
     "/speaker/{id}/topics": {
       "get": {
+        "description": "GetSpeakerTopics",
         "operationId": "GetSpeakerTopics",
         "summary": "GetSpeakerTopics",
         "parameters": [
@@ -247,6 +252,7 @@
     },
     "/topics": {
       "get": {
+        "description": "GetTopics",
         "operationId": "GetTopics",
         "summary": "GetTopics",
         "parameters": [
@@ -269,6 +275,7 @@
     },
     "/topic/{id}": {
       "get": {
+        "description": "GetTopic",
         "operationId": "GetTopic",
         "summary": "GetTopic",
         "parameters": [
@@ -292,6 +299,7 @@
     },
     "/topic/{id}/speakers": {
       "get": {
+        "description": "GetTopicSpeakers",
         "operationId": "GetTopicSpeakers",
         "summary": "GetTopicSpeakers",
         "parameters": [
@@ -315,6 +323,7 @@
     },
     "/topic/{id}/sessions": {
       "get": {
+        "description": "GetTopicSessions",
         "operationId": "GetTopicSessions",
         "summary": "GetTopicSessions",
         "parameters": [

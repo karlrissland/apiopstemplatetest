@@ -1,6 +1,4 @@
-<!--
-     Updated APIM Policy... at the api level
--->
+<!--Updated Policy for the GetSpeaker Operation-->
 <policies>
 	<inbound>
 		<base />
