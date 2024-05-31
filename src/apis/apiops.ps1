@@ -49,7 +49,7 @@ function getApiExport {
     $url = "https://management.azure.com/subscriptions/$subscriptionId/resourceGroups/$resourceGroup/providers/Microsoft.ApiManagement/service/$apimServiceName/$($workspaceUrlPart)apis/$apiName"
     $qs = "?format=$definitionFormat&export=true&api-version=$restApiVersion"
 
-    $response = Invoke-RestMethod -Method Get -Uri ($url + $qs) -Headers $headers
+    $null = Invoke-RestMethod -Method Get -Uri ($url + $qs) -Headers $headers
 
     # if json-link was used
     #-------------------------------------
@@ -87,19 +87,16 @@ function getApiPolicy{
         'Authorization' = "Bearer $accessToken"
     }
 
-    Write-Host $apimServiceName
-
     $url = "https://management.azure.com/subscriptions/$subscriptionId/resourceGroups/$resourceGroup/providers/Microsoft.ApiManagement/service/$apimServiceName/$($workspaceUrlPart)apis/$apiName/policies/policy"
     $qs = "?api-version=$restApiVersion"
 
     try{
-        $response = Invoke-RestMethod -Method Get -Uri ($url + $qs) -Headers $headers
+        $null = Invoke-RestMethod -Method Get -Uri ($url + $qs) -Headers $headers
 
         $policy = $response.properties.value
 
         Set-Content -Path "./$folderName/policy.xml" -Value $policy
 
-        #return $response
     }catch{
         Write-Host "No policy found for api $operationName"
     }
@@ -119,9 +116,7 @@ function getApiOperations{
     $url = "https://management.azure.com/subscriptions/$subscriptionId/resourceGroups/$resourceGroup/providers/Microsoft.ApiManagement/service/$apimServiceName/$($workspaceUrlPart)apis/$apiName/operations"
     $qs = "?api-version=$restApiVersion"
 
-    $response = Invoke-RestMethod -Method Get -Uri ($url + $qs) -Headers $headers
-
-    Write-Host $response
+    $null = Invoke-RestMethod -Method Get -Uri ($url + $qs) -Headers $headers
 
     $operationNames = @()
     foreach ($operation in $response.value) {
@@ -159,7 +154,7 @@ function getOperationPolicys{
             }
         }
         catch{
-            Write-Host "No policy found for operation $operationName"
+            Write-Host "----------------------------No policy found for operation $operationName"
         }
     }
 }
@@ -200,12 +195,7 @@ function putApiImportCreateUpdate{
     $qs = "?api-version=$restApiVersion"
     $uri = ($url + $qs)
 
-    Write-Host $uri
-
-    $response = Invoke-RestMethod -Method Put -Uri $uri -Headers $headers -Body $body
-
-    Write-Host $response
-    #return $response
+    $null = Invoke-RestMethod -Method Put -Uri $uri -Headers $headers -Body $body
 }
 
 function putApiPolicyCreateUpdate{
@@ -234,10 +224,7 @@ function putApiPolicyCreateUpdate{
     # Need to check the provisioning state to be sure... quick and dirty fix is to put a wait/sleep command here
     Start-Sleep -Seconds 2
 
-    $response = Invoke-RestMethod -Method Put -Uri ($url + $qs) -Headers $headers -Body $body
-
-    Write-Host $response
-    #return $response
+    $null = Invoke-RestMethod -Method Put -Uri ($url + $qs) -Headers $headers -Body $body
 }
 
 function putApiOperationPolicyCreateUpdate{
@@ -263,10 +250,7 @@ function putApiOperationPolicyCreateUpdate{
     $url = "https://management.azure.com/subscriptions/$subscriptionId/resourceGroups/$resourceGroup/providers/Microsoft.ApiManagement/service/$apimServicename/$($workspaceUrlPart)apis/$apiName/operations/$operationName/policies/policy"
     $qs = "?api-version=$restApiVersion"
 
-    $response = Invoke-RestMethod -Method Put -Uri ($url + $qs) -Headers $headers -Body $body
-
-    Write-Host $response
-    #return $response
+    $null = Invoke-RestMethod -Method Put -Uri ($url + $qs) -Headers $headers -Body $body
 }
 
 function removeApiFromList {
@@ -365,9 +349,7 @@ function deleteApi {
     $url = "https://management.azure.com/subscriptions/$subscriptionId/resourceGroups/$resourceGroup/providers/Microsoft.ApiManagement/service/$apimServiceName/$($workspaceUrlPart)apis/$apiName"
     $qs = "?api-version=$restApiVersion"
 
-    $response = Invoke-RestMethod -Method Delete -Uri ($url + $qs) -Headers $headers
-
-    Write-Host $response
+    $null = Invoke-RestMethod -Method Delete -Uri ($url + $qs) -Headers $headers
 
     return $apilist
 }
@@ -388,11 +370,11 @@ function linkApiToProducts{
     $url = "https://management.azure.com/subscriptions/$subscriptionId/resourceGroups/$resourceGroup/providers/Microsoft.ApiManagement/service/$apimServicename/$($workspaceUrlPart)products"
     $qs = "?api-version=$restApiVersion"
 
-    $response = Invoke-RestMethod -Method GET -Uri ($url + $qs) -Headers $headers
+    $null = Invoke-RestMethod -Method GET -Uri ($url + $qs) -Headers $headers
 
     # For each product, link it to the API
     foreach($product in $response.value) {
-        Write-Output "Linking api to product: $($product.name)"
+        Write-Output "----------------------------Linking api to product: $($product.name)"
 
         try{
             #Difference between workspace and service calls
@@ -402,16 +384,16 @@ function linkApiToProducts{
                 $qs = "?api-version=$restApiVersion"
 
                 # Link the API to the product
-                $response = Invoke-RestMethod -Method PUT -Uri ($url + $qs) -Headers $headers
+                $null = Invoke-RestMethod -Method PUT -Uri ($url + $qs) -Headers $headers
             } else {
                 # if using workspaces
                 $body = "{""properties"": {""apiId"": ""/subscriptions/$subscriptionId/resourceGroups/$resourceGroup/providers/Microsoft.ApiManagement/service/$apimServicename/workspaces/$workspaceName/apis/$apiName""}}"
                 $url = "https://management.azure.com/subscriptions/$subscriptionId/resourceGroups/$resourceGroup/providers/Microsoft.ApiManagement/service/$apimServicename/workspaces/$workspaceName/products/$($product.name)/apiLinks/$apiName$($product.name)"
                 $qs = "?api-version=$restApiVersion"
-                $response = Invoke-RestMethod -Method Put -Uri ($url + $qs) -Headers $headers -Body $body
+                $null = Invoke-RestMethod -Method Put -Uri ($url + $qs) -Headers $headers -Body $body
 
             }
-            $null = $response
+
         }catch{
             Write-Host "Error linking api to product: $($product.name).  Link may have already existed."
         }
@@ -434,11 +416,10 @@ function linkApiToTags{
     $url = "https://management.azure.com/subscriptions/$subscriptionId/resourceGroups/$resourceGroup/providers/Microsoft.ApiManagement/service/$apimServicename/$($workspaceUrlPart)tags"
     $qs = "?api-version=$restApiVersion"
 
-    $response = Invoke-RestMethod -Method GET -Uri ($url + $qs) -Headers $headers
-    write-output $response
+    $null = Invoke-RestMethod -Method GET -Uri ($url + $qs) -Headers $headers
 
     foreach($tag in $response.value) {
-        Write-Output "Linking api to tag : $($tag.name)"
+        Write-Output "----------------------------Linking api to tag : $($tag.name)"
 
         try{
             # Difference between workspace and service calls
@@ -448,17 +429,16 @@ function linkApiToTags{
                 $qs = "?api-version=$restApiVersion"
 
                 # Link the API to the tag
-                $response = Invoke-RestMethod -Method PUT -Uri ($url + $qs) -Headers $headers
+                $null = Invoke-RestMethod -Method PUT -Uri ($url + $qs) -Headers $headers
             } else {
                 # if using workspaces
                 $body = "{""properties"": {""apiId"": ""/subscriptions/$subscriptionId/resourceGroups/$resourceGroup/providers/Microsoft.ApiManagement/service/$apimServicename/workspaces/$workspaceName/apis/$apiName""}}"
                 $url = "https://management.azure.com/subscriptions/$subscriptionId/resourceGroups/$resourceGroup/providers/Microsoft.ApiManagement/service/$apimServicename/workspaces/$workspaceName/tags/$($tag.name)/apiLinks/$apiName$($tag.name)"
                 $qs = "?api-version=$restApiVersion"
-                $response = Invoke-RestMethod -Method Put -Uri ($url + $qs) -Headers $headers -Body $body
+                $null = Invoke-RestMethod -Method Put -Uri ($url + $qs) -Headers $headers -Body $body
             }
-            $null = $response
         }catch{
-            Write-Host "Error linking api to tag: $($tag.name).  Link may have already existed."
+            Write-Host "----------------------------Error linking api to tag: $($tag.name).  Link may have already existed."
         }
     }
 }
@@ -477,6 +457,7 @@ function createApi {
 
 
     # Need to get the apiName and apiPath from the user for this API
+    # This will cause an issue if you are getting apilist from a variable since we cannot prompt the user in a pipeline
     Write-Host "For the API in folder: $apiFolder"
     $apiName = Read-Host "Enter the API Name: "
 
@@ -487,8 +468,7 @@ function createApi {
 
     # Import the swagger to create the API
     # NOTE: Need to expand this to support other definition formats
-    $output = putApiImportCreateUpdate -apiName $apiName -folderName $apiFolder -definitionFormat "swagger-json" -apiPath $apiPath 
-    Write-Host $output
+    $null = putApiImportCreateUpdate -apiName $apiName -folderName $apiFolder -definitionFormat "swagger-json" -apiPath $apiPath 
 
     # Look for policy.xml if exists deploy it
     if ((Test-Path -Path "./$apiFolder/policy.xml")) {
@@ -501,17 +481,14 @@ function createApi {
     foreach ($operationPolicyFile in $operationPolicyFiles) {
         $operationName = [string]$operationPolicyFile.BaseName
         $operationName = $operationName.Replace("-policy", "")
-        $output = putApiOperationPolicyCreateUpdate -apiName $apiName -folderName $apiFolder -operationName $operationName
-        Write-Host $output
+        $null = putApiOperationPolicyCreateUpdate -apiName $apiName -folderName $apiFolder -operationName $operationName
     }
 
     # Associate API with products
-    $output = linkApiToProducts -apiName $apiName
-    Write-Host $output
+    $null = linkApiToProducts -apiName $apiName
 
     # Associate API with tags
-    $output = linkApiToTags -apiName $apiName
-    Write-Host $output
+    $null = linkApiToTags -apiName $apiName
 
     return $apilist
 }
@@ -545,9 +522,7 @@ function updateApi {
         $url = "https://management.azure.com/subscriptions/$subscriptionId/resourceGroups/$resourceGroup/providers/Microsoft.ApiManagement/service/$apimServiceName/$($workspaceUrlPart)apis/$apiName/policies/policy"
         $qs = "?api-version=$restApiVersion"
     
-        $response = Invoke-RestMethod -Method Delete -Uri ($url + $qs) -Headers $headers
-
-        Write-Host $response
+        $null = Invoke-RestMethod -Method Delete -Uri ($url + $qs) -Headers $headers
     }
 
     $operations = getApiOperations -apiName $apiInfo.'api-name'
@@ -565,13 +540,10 @@ function updateApi {
             $url = "https://management.azure.com/subscriptions/$subscriptionId/resourceGroups/$resourceGroup/providers/Microsoft.ApiManagement/service/$apimServiceName/$($workspaceUrlPart)apis/$apiName/operations/$operation/policies/policy"
             $qs = "?api-version=$restApiVersion"
         
-            $response = Invoke-RestMethod -Method Delete -Uri ($url + $qs) -Headers $headers
+            $null = Invoke-RestMethod -Method Delete -Uri ($url + $qs) -Headers $headers
 
-            Write-Host $response
         }
     }
-  
-
 }
 
 function deployAPIs{
@@ -601,8 +573,7 @@ function deployAPIs{
     
     # Remaining directories are the ones that need to be updated
     foreach ($directory in $filesysDirNames) {
-        $output = updateApi -apiFolder $directory #($directory) # Update the API
-        Write-Host $output
+        updateApi -apiFolder $directory #($directory) # Update the API
     }
 
     return $apilist
@@ -668,8 +639,6 @@ Write-Host
 Write-Host "Working directory: $workingDirectory"
 Write-Host "Script directory: $PSScriptRoot"
 
-$DebugPreference = 'Continue'
-
 # Get the access token
 $context = Get-AzContext
 $profile = [Microsoft.Azure.Commands.Common.Authentication.Abstractions.AzureRmProfileProvider]::Instance.Profile
@@ -678,7 +647,7 @@ $token = $profileClient.AcquireAccessToken($context.Subscription.TenantId)
 $accessToken = $token.AccessToken
 
 if ($apilistjsonparam -eq $null -or $apilistjsonparam -eq "") {
-    Write-Host "Using api-list.json file"
+    Write-Host "----------------------------Using api-list.json file"
     # Script to Deploy APIs, maintain the api-list.json file, and delete APIs that are no longer needed.
     # Check if api-list.json exists, if not, create it and seed it with an empty json array
     if (!(Test-Path -Path "./api-list.json")) {
@@ -688,15 +657,13 @@ if ($apilistjsonparam -eq $null -or $apilistjsonparam -eq "") {
 
     $apilist = @(Get-Content -Path "./api-list.json" -Raw | ConvertFrom-Json)
 } else {
-    Write-Host "Using apilistjsonparam"
+    Write-Host "----------------------------Using apilistjsonparam"
     $apilist = @($apilistjsonparam | ConvertFrom-Json)
 }
 
 $apiListDirNames = @()
-#$apis = @()
 foreach ($api in $apilist) {
     $apiListDirNames += $api.'folder-name'
-    Write-Host $api.'folder-name'
 }
 
 if ([string]::IsNullOrEmpty($workspaceName)) {
@@ -706,31 +673,18 @@ if ([string]::IsNullOrEmpty($workspaceName)) {
 }
 
 # Get all the directory names in the current directory
-Write-Host "------------------------"
-Write-Host "Directories from filesys"
-Write-Host "------------------------"
 $filesysDirNames= (Get-ChildItem -Path "." -Directory).name
-Write-Host $filesysDirNames
-Write-Host "------------------------"
 
 if($scriptFunction -eq "Deploy"){
-    Write-Host "Deploying APIs"
     $apilist = deployAPIs -apiListDirNames $apiListDirNames -filesysDirNames $filesysDirNames -apilist $apilist
 
 }elseif($scriptFunction -eq "Extract"){
-    Write-Host "Extracting APIs"
     $apilist = extractAPIs -apilist $apilist
     
 } else {
-    Write-Host "Invalid script function"
+    Write-Host "----------------------------Invalid script function"
 }
 
-# if ($apilistjsonparam -eq $null -or $apilistjsonparam -eq "") {
-    Write-Host "Updating api-list.json"
-    $apilist | ConvertTo-Json -AsArray | Set-Content -Path "./api-list.json"
-# } else {
-#     Write-Host "api-list json can be found in the output variable"
-#     $output = $apilist | ConvertTo-Json -AsArray
-#     Write-Host "Output: $output"
-#     Write-Output $output
-# }
+Write-Host "----------------------------Updating api-list.json"
+$apilist | ConvertTo-Json -AsArray | Set-Content -Path "./api-list.json"
+
