@@ -83,7 +83,7 @@ function getApiPolicy{
         'Authorization' = "Bearer $accessToken"
     }
 
-    Write-Debug $apimServiceName
+    Write-Host $apimServiceName
 
     $url = "https://management.azure.com/subscriptions/$subscriptionId/resourceGroups/$resourceGroup/providers/Microsoft.ApiManagement/service/$apimServiceName/$($workspaceUrlPart)apis/$apiName/policies/policy"
     $qs = "?api-version=$restApiVersion"
@@ -97,7 +97,7 @@ function getApiPolicy{
 
         #return $response
     }catch{
-        Write-Debug "No policy found for api $operationName"
+        Write-Host "No policy found for api $operationName"
     }
 }
 
@@ -115,7 +115,7 @@ function getApiOperations{
 
     $response = Invoke-RestMethod -Method Get -Uri ($url + $qs) -Headers $headers
 
-    Write-Debug $response
+    Write-Host $response
 
     $operationNames = @()
     foreach ($operation in $response.value) {
@@ -151,7 +151,7 @@ function getOperationPolicys{
             }
         }
         catch{
-            Write-Debug "No policy found for operation $operationName"
+            Write-Host "No policy found for operation $operationName"
         }
     }
 }
@@ -192,7 +192,7 @@ function putApiImportCreateUpdate{
 
     $response = Invoke-RestMethod -Method Put -Uri $uri -Headers $headers -Body $body
 
-    Write-Debug $response
+    Write-Host $response
     #return $response
 }
 
@@ -222,7 +222,7 @@ function putApiPolicyCreateUpdate{
 
     $response = Invoke-RestMethod -Method Put -Uri ($url + $qs) -Headers $headers -Body $body
 
-    Write-Debug $response
+    Write-Host $response
     #return $response
 }
 
@@ -249,7 +249,7 @@ function putApiOperationPolicyCreateUpdate{
 
     $response = Invoke-RestMethod -Method Put -Uri ($url + $qs) -Headers $headers -Body $body
 
-    Write-Debug $response
+    Write-Host $response
     #return $response
 }
 
@@ -259,7 +259,7 @@ function removeApiFromList {
         [object]$apilist
     )
 
-    Write-Debug "        Removing API from list: $apiFolder"
+    Write-Host "        Removing API from list: $apiFolder"
 
     # Convert the JSON to a PowerShell object
     $jsonObject = @(Get-Content -Path "./api-list.json" -Raw | ConvertFrom-Json)
@@ -283,7 +283,7 @@ function addApiToList {
         [object]$apilist
     )
 
-    Write-Debug "        Adding API to list: $apiFolder"
+    Write-Host "        Adding API to list: $apiFolder"
     # $apiName = getApiNameFromParams($apiFolder)
     ## Add the API to the api-list.json file
 
@@ -346,7 +346,7 @@ function deleteApi {
 
     $response = Invoke-RestMethod -Method Delete -Uri ($url + $qs) -Headers $headers
 
-    Write-Debug $response
+    Write-Host $response
 
     return $apilist
 }
@@ -390,7 +390,7 @@ function linkApiToProducts{
             }
             $null = $response
         }catch{
-            Write-Debug "Error linking api to product: $($product.name).  Link may have already existed."
+            Write-Host "Error linking api to product: $($product.name).  Link may have already existed."
         }
     }
 }
@@ -433,7 +433,7 @@ function linkApiToTags{
             }
             $null = $response
         }catch{
-            Write-Debug "Error linking api to tag: $($tag.name).  Link may have already existed."
+            Write-Host "Error linking api to tag: $($tag.name).  Link may have already existed."
         }
     }
 }
@@ -450,7 +450,7 @@ function createApi {
 
 
     # Need to get the apiName and apiPath from the user for this API
-    Write-Debug "For the API in folder: $apiFolder"
+    Write-Host "For the API in folder: $apiFolder"
     $apiName = Read-Host "Enter the API Name: "
 
     $apiPath = Read-Host "Enter the API Path: "
@@ -461,7 +461,7 @@ function createApi {
     # Import the swagger to create the API
     # NOTE: Need to expand this to support other definition formats
     $output = putApiImportCreateUpdate -apiName $apiName -folderName $apiFolder -definitionFormat "swagger-json" -apiPath $apiPath 
-    Write-Debug $output
+    Write-Host $output
 
     # Look for policy.xml if exists deploy it
     if ((Test-Path -Path "./$apiFolder/policy.xml")) {
@@ -475,16 +475,16 @@ function createApi {
         $operationName = [string]$operationPolicyFile.BaseName
         $operationName = $operationName.Replace("-policy", "")
         $output = putApiOperationPolicyCreateUpdate -apiName $apiName -folderName $apiFolder -operationName $operationName
-        Write-Debug $output
+        Write-Host $output
     }
 
     # Associate API with products
     $output = linkApiToProducts -apiName $apiName
-    Write-Debug $output
+    Write-Host $output
 
     # Associate API with tags
     $output = linkApiToTags -apiName $apiName
-    Write-Debug $output
+    Write-Host $output
 
     return $apilist
 }
@@ -518,7 +518,7 @@ function updateApi {
     
         $response = Invoke-RestMethod -Method Delete -Uri ($url + $qs) -Headers $headers
 
-        Write-Debug $response
+        Write-Host $response
     }
 
     $operations = getApiOperations -apiName $apiInfo.'api-name'
@@ -538,7 +538,7 @@ function updateApi {
         
             $response = Invoke-RestMethod -Method Delete -Uri ($url + $qs) -Headers $headers
 
-            Write-Debug $response
+            Write-Host $response
         }
     }
   
@@ -571,7 +571,7 @@ function deployAPIs{
     # Remaining directories are the ones that need to be updated
     foreach ($directory in $filesysDirNames) {
         $output = updateApi -apiFolder $directory #($directory) # Update the API
-        Write-Debug $output
+        Write-Host $output
     }
 
     return $apilist
@@ -627,13 +627,13 @@ function extractAPIs{
     return $apiList
 }
 
-Write-Debug "-----------------------------------------------------------"
-Write-Debug "| NOTE: This script is POC quality, not production ready. |"
-Write-Debug "|      There is no error handling or validation.          |"
-Write-Debug "-----------------------------------------------------------"
-Write-Debug
-Write-Debug "Working directory: $workingDirectory"
-Write-Debug "Script directory: $PSScriptRoot"
+Write-Host "-----------------------------------------------------------"
+Write-Host "| NOTE: This script is POC quality, not production ready. |"
+Write-Host "|      There is no error handling or validation.          |"
+Write-Host "-----------------------------------------------------------"
+Write-Host
+Write-Host "Working directory: $workingDirectory"
+Write-Host "Script directory: $PSScriptRoot"
 
 $DebugPreference = 'Continue'
 
@@ -645,7 +645,7 @@ $token = $profileClient.AcquireAccessToken($context.Subscription.TenantId)
 $accessToken = $token.AccessToken
 
 if ($apilistjsonparam -eq $null -or $apilistjsonparam -eq "") {
-    Write-Debug "Using api-list.json file"
+    Write-Host "Using api-list.json file"
     # Script to Deploy APIs, maintain the api-list.json file, and delete APIs that are no longer needed.
     # Check if api-list.json exists, if not, create it and seed it with an empty json array
     if (!(Test-Path -Path "./api-list.json")) {
@@ -655,7 +655,7 @@ if ($apilistjsonparam -eq $null -or $apilistjsonparam -eq "") {
 
     $apilist = @(Get-Content -Path "./api-list.json" -Raw | ConvertFrom-Json)
 } else {
-    Write-Debug "Using apilistjsonparam"
+    Write-Host "Using apilistjsonparam"
     $apilist = @($apilistjsonparam | ConvertFrom-Json)
 }
 
@@ -663,7 +663,7 @@ $apiListDirNames = @()
 #$apis = @()
 foreach ($api in $apilist) {
     $apiListDirNames += $api.'folder-name'
-    Write-Debug $api.'folder-name'
+    Write-Host $api.'folder-name'
 }
 
 if ([string]::IsNullOrEmpty($workspaceName)) {
@@ -673,31 +673,31 @@ if ([string]::IsNullOrEmpty($workspaceName)) {
 }
 
 # Get all the directory names in the current directory
-Write-Debug "------------------------"
-Write-Debug "Directories from filesys"
-Write-Debug "------------------------"
+Write-Host "------------------------"
+Write-Host "Directories from filesys"
+Write-Host "------------------------"
 $filesysDirNames= (Get-ChildItem -Path "." -Directory).name
-Write-Debug $filesysDirNames
-Write-Debug "------------------------"
+Write-Host $filesysDirNames
+Write-Host "------------------------"
 
 if($scriptFunction -eq "Deploy"){
-    Write-Debug "Deploying APIs"
+    Write-Host "Deploying APIs"
     $apilist = deployAPIs -apiListDirNames $apiListDirNames -filesysDirNames $filesysDirNames -apilist $apilist
 
 }elseif($scriptFunction -eq "Extract"){
-    Write-Debug "Extracting APIs"
+    Write-Host "Extracting APIs"
     $apilist = extractAPIs -apilist $apilist
     
 } else {
-    Write-Debug "Invalid script function"
+    Write-Host "Invalid script function"
 }
 
 if ($apilistjsonparam -eq $null -or $apilistjsonparam -eq "") {
-    Write-Debug "Updating api-list.json"
+    Write-Host "Updating api-list.json"
     $apilist | ConvertTo-Json -AsArray | Set-Content -Path "./api-list.json"
 } else {
-    Write-Debug "api-list json can be found in the output variable"
+    Write-Host "api-list json can be found in the output variable"
     $output = $apilist | ConvertTo-Json -AsArray
-    Write-Debug "Output: $output"
+    Write-Host "Output: $output"
     Write-Output $output
 }
