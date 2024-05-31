@@ -61,7 +61,7 @@ jobs:
 
           Set-Location -Path ${{ GITHUB.WORKSPACE }}/src/apis
 
-          $output = pwsh -File apiops.ps1 -resourceGroup "${{env.RESOURCE_GROUP}}" -subscriptionId "${{env.SUBSCRIPTION_ID}}" -apimServiceName "${{env.APIM_SERVICE_NAME}}" -restApiVersion "${{env.REST_API_VERSION}}" -scriptFunction "Deploy" -apilistjsonparam "${{env.API_LIST_JSON}}"
+          $output = pwsh -File apiops.ps1 -resourceGroup "${{env.RESOURCE_GROUP}}" -subscriptionId "${{env.SUBSCRIPTION_ID}}" -apimServiceName "${{env.APIM_SERVICE_NAME}}" -restApiVersion "${{env.REST_API_VERSION}}" -scriptFunction "Deploy" -apilistjsonparam '${{env.API_LIST_JSON}}'
           
           Write-Host "output: $output"
 
