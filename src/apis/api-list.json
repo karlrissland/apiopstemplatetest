@@ -3,10 +3,5 @@
     "api-path": "team1api2path",
     "api-name": "team1api2",
     "folder-name": "demo-conference-api2"
-  },
-  {
-    "api-path": "testapi",
-    "api-name": "testapi",
-    "folder-name": "mytestapi"
   }
 ]
