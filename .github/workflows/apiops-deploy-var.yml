@@ -1,4 +1,4 @@
-name: ApiOpsDeploy-file
+name: ApiOpsDeploy-var
 
 # Controls when the workflow will run
 on:
