@@ -234,7 +234,7 @@ function putApiOperationPolicyCreateUpdate{
         [string]$operationName
     )
 
-    write-host "----------------------------Putting Operation Policy CreateUpdate for $apiName"
+    write-host "----------------------------Putting Operation Policy CreateUpdate for operation $operationName"
 
     $contents = Get-Content -Path "./$folderName/$operationName-policy.xml" -Raw
 
@@ -544,6 +544,12 @@ function updateApi {
 
         }
     }
+
+    # Associate API with products
+    $null = linkApiToProducts -apiName $apiName
+
+    # Associate API with tags
+    $null = linkApiToTags -apiName $apiName
 }
 
 function deployAPIs{
