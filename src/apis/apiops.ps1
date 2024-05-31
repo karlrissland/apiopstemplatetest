@@ -190,6 +190,8 @@ function putApiImportCreateUpdate{
     $qs = "?api-version=$restApiVersion"
     $uri = ($url + $qs)
 
+    Write-Host $uri
+
     $response = Invoke-RestMethod -Method Put -Uri $uri -Headers $headers -Body $body
 
     Write-Host $response
