@@ -370,7 +370,7 @@ function linkApiToProducts{
     $url = "https://management.azure.com/subscriptions/$subscriptionId/resourceGroups/$resourceGroup/providers/Microsoft.ApiManagement/service/$apimServicename/$($workspaceUrlPart)products"
     $qs = "?api-version=$restApiVersion"
 
-    $null = Invoke-RestMethod -Method GET -Uri ($url + $qs) -Headers $headers
+    $response = Invoke-RestMethod -Method GET -Uri ($url + $qs) -Headers $headers
 
     # For each product, link it to the API
     foreach($product in $response.value) {
@@ -416,7 +416,7 @@ function linkApiToTags{
     $url = "https://management.azure.com/subscriptions/$subscriptionId/resourceGroups/$resourceGroup/providers/Microsoft.ApiManagement/service/$apimServicename/$($workspaceUrlPart)tags"
     $qs = "?api-version=$restApiVersion"
 
-    $null = Invoke-RestMethod -Method GET -Uri ($url + $qs) -Headers $headers
+    $response = Invoke-RestMethod -Method GET -Uri ($url + $qs) -Headers $headers
 
     foreach($tag in $response.value) {
         Write-Output "----------------------------Linking api to tag : $($tag.name)"
