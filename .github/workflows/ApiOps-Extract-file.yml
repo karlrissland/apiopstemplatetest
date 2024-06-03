@@ -68,10 +68,12 @@ jobs:
 
           git add .
           git commit -m "updated apis"
-          git push
+          git push --set-upstream origin apiops-extract
 
           gh pr create --title "Updated APIs" --body "Extracted APIs" --base main
         shell: pwsh
+        env:
+          GH_TOKEN: ${{secrets.GH_PAT}}
 
 
           
