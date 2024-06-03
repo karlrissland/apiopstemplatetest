@@ -24,7 +24,7 @@ jobs:
       APIM_SERVICE_NAME: ${{vars.APIM_SERVICE_NAME}}
       RESOURCE_GROUP: ${{vars.RESOURCE_GROUP}}
       REST_API_VERSION: ${{vars.REST_API_VERSION}}
-      SUBSCRIPTION_ID: ${{vars.SUBSCRIPTION_ID
+      SUBSCRIPTION_ID: ${{vars.SUBSCRIPTION_ID}}
 
     steps:
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
