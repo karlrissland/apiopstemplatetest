@@ -1,6 +1,10 @@
 [
+  "----------------------------Linking api to product: product1",
+  "----------------------------Linking api to product: product2",
+  "----------------------------Linking api to tag : tag1",
+  "----------------------------Linking api to tag : tag2",
   {
-    "api-path": "team1api2path",
+    "api-path": "",
     "api-name": "team1api2",
     "folder-name": "demo-conference-api2"
   }
