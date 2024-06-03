@@ -1,4 +1,4 @@
-name: ApiOpsDeploy-file
+name: ApiOps Deploy using api-list.json file
 
 # Controls when the workflow will run
 on:

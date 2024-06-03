@@ -1,4 +1,4 @@
-name: ApiOpsDeploy-var
+name: ApiOps Deploy using api-list from GitHub Variable
 
 # Controls when the workflow will run
 on:

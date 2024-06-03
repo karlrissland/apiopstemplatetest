@@ -1,4 +1,4 @@
-name: ApiOps Extract using api-list.json file
+name: ApiOps Extract using api-list from GitHub Variable
 
 on:
   workflow_dispatch:
@@ -25,6 +25,7 @@ jobs:
       RESOURCE_GROUP: ${{vars.RESOURCE_GROUP}}
       REST_API_VERSION: ${{vars.REST_API_VERSION}}
       SUBSCRIPTION_ID: ${{vars.SUBSCRIPTION_ID}}
+      API_LIST_JSON: ${{vars.API_LIST_JSON}}
 
     steps:
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
@@ -64,7 +65,7 @@ jobs:
 
           Set-Location -Path ${{ GITHUB.WORKSPACE }}/src/apis  # NOTE: Change this to the location of your ApiOps.ps1 script
 
-          pwsh -File apiops.ps1 -resourceGroup "${{env.RESOURCE_GROUP}}" -subscriptionId "${{env.SUBSCRIPTION_ID}}" -apimServiceName "${{env.APIM_SERVICE_NAME}}" -restApiVersion "${{env.REST_API_VERSION}}" -scriptFunction "Extract"
+          pwsh -File apiops.ps1 -resourceGroup "${{env.RESOURCE_GROUP}}" -subscriptionId "${{env.SUBSCRIPTION_ID}}" -apimServiceName "${{env.APIM_SERVICE_NAME}}" -restApiVersion "${{env.REST_API_VERSION}}" -scriptFunction "Extract"  -apilistjsonparam '${{env.API_LIST_JSON}}'
 
           git add .
           git commit -m "updated apis"
