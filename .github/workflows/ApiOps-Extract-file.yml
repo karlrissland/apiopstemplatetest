@@ -1,24 +1,31 @@
-# This is a basic workflow to help you get started with Actions
-
 name: ApiOps Extract File
 
-# Controls when the workflow will run
 on:
-  # Allows you to run this workflow manually from the Actions tab
   workflow_dispatch:
+    inputs:
+      environment:
+        description: 'environment to deploy to'
+        required: true
+        type: environment
 
 permissions:
   id-token: write
   contents: write
 
-# A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
-  # This workflow contains a single job called "build"
-  build:
-    # The type of runner that the job will run on
+  Extract-APIs:
     runs-on: ubuntu-latest
+    environment: ${{ github.event.inputs.environment }}
 
-    # Steps represent a sequence of tasks that will be executed as part of the job
+    env:
+      SP_APPID: ${{secrets.APPID}}
+      SP_PASSWORD: ${{secrets.PASSWORD}}
+      SP_TENANT: ${{secrets.TENANT}}
+      APIM_SERVICE_NAME: ${{vars.APIM_SERVICE_NAME}}
+      RESOURCE_GROUP: ${{vars.RESOURCE_GROUP}}
+      REST_API_VERSION: ${{vars.REST_API_VERSION}}
+      SUBSCRIPTION_ID: ${{vars.SUBSCRIPTION_ID
+
     steps:
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
       - uses: actions/checkout@v4
@@ -30,3 +37,41 @@ jobs:
           git config --global user.email 'github-actions@github.com'
           git checkout -b apiops-extract
           git push origin apiops-extract
+
+      # Extract APIs based on api-ops file
+      - name: Extract APIs
+        run: |
+          Write-Host "input: ${{inputs.environment}}"
+          Write-Host "appid: ${{env.SP_APPID}}"
+          Write-Host "pass: ${{env.SP_PASSWORD}}"
+          Write-Host "tenant: ${{env.SP_TENANT}}"
+          Write-Host "resource group: ${{env.RESOURCE_GROUP}}"
+          Write-Host "subscription id: ${{env.SUBSCRIPTION_ID}}"
+          Write-Host "rest api version: ${{env.REST_API_VERSION}}"
+          Write-Host "apim service name: ${{env.APIM_SERVICE_NAME}}"
+          Write-Host "api list json: ${{env.API_LIST_JSON}}"
+
+          Install-Module -Name Az.Accounts -Scope CurrentUser -Force
+
+          Import-Module Az.Accounts
+
+          # Create a PSCredential object with the service principal's app id (client id) and secret
+          $securePassword = ConvertTo-SecureString -String '${{env.SP_PASSWORD}}' -AsPlainText -Force
+          $credential = New-Object -TypeName System.Management.Automation.PSCredential -ArgumentList '${{env.SP_APPID}}', $securePassword
+
+          # Connect to Azure with the service principal
+          Connect-AzAccount -ServicePrincipal -Credential $credential -Tenant '${{env.SP_TENANT}}'
+
+          Set-Location -Path ${{ GITHUB.WORKSPACE }}/src/apis  # NOTE: Change this to the location of your ApiOps.ps1 script
+
+          pwsh -File apiops.ps1 -resourceGroup "${{env.RESOURCE_GROUP}}" -subscriptionId "${{env.SUBSCRIPTION_ID}}" -apimServiceName "${{env.APIM_SERVICE_NAME}}" -restApiVersion "${{env.REST_API_VERSION}}" -scriptFunction "Extract"
+
+          git add .
+          git commit -m "updated apis"
+          git push
+
+          gh pr create --title "Updated APIs" --body "Extracted APIs" --base main
+        shell: pwsh
+
+
+          
