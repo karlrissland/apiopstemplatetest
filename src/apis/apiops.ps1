@@ -449,7 +449,7 @@ function createApi {
         [object]$apilist
     )
 
-    write-host "----------------------------Creating API for folder $apiFolder"
+    write-host "------------------------Creating API for folder $apiFolder"
 
     # Scenario
     # API Folder Exists but API does not exist in api-list.json
@@ -498,7 +498,7 @@ function updateApi {
         [string]$apiFolder
     )
 
-    write-host "----------------------------Updating API for folder $apiFolder"
+    write-host "------------------------Updating API for folder $apiFolder"
 
     $apiInfo = getApiInfoFromFile -apiFolder $apiFolder -apilist $apilist
     $apiName = $apiInfo.'api-name'
@@ -559,7 +559,7 @@ function deployAPIs{
         [object]$apilist
     )
 
-    write-host "----------------------------Deploying APIs"
+    write-host "------------------------Deploying APIs"
 
     # Compare the list of APIs in the api-list.json file to the directories in the file system
     $differences = Compare-Object -ReferenceObject $apiListDirNames -DifferenceObject $filesysDirNames
@@ -590,7 +590,7 @@ function extractAPIs{
         [object]$apilist
     )
 
-    write-host "----------------------------Extracting APIs"
+    write-host "------------------------Extracting APIs"
     # Will extract APIs listed in api-list.json, must have the apiId correct and a folder name defined
 
     # Read the api-list.json file
@@ -653,7 +653,7 @@ $token = $profileClient.AcquireAccessToken($context.Subscription.TenantId)
 $accessToken = $token.AccessToken
 
 if ($apilistjsonparam -eq $null -or $apilistjsonparam -eq "") {
-    Write-Host "----------------------------Using api-list.json file"
+    Write-Host "--------------------Using api-list.json file"
     # Script to Deploy APIs, maintain the api-list.json file, and delete APIs that are no longer needed.
     # Check if api-list.json exists, if not, create it and seed it with an empty json array
     if (!(Test-Path -Path "./api-list.json")) {
@@ -663,7 +663,7 @@ if ($apilistjsonparam -eq $null -or $apilistjsonparam -eq "") {
 
     $apilist = @(Get-Content -Path "./api-list.json" -Raw | ConvertFrom-Json)
 } else {
-    Write-Host "----------------------------Using apilistjsonparam"
+    Write-Host "--------------------Using apilistjsonparam"
     $apilist = @($apilistjsonparam | ConvertFrom-Json)
 }
 
@@ -688,9 +688,9 @@ if($scriptFunction -eq "Deploy"){
     $apilist = extractAPIs -apilist $apilist
     
 } else {
-    Write-Host "----------------------------Invalid script function"
+    Write-Host "--------------------Invalid script function"
 }
 
-Write-Host "----------------------------Updating api-list.json"
+Write-Host "--------------------Updating api-list.json"
 $apilist | ConvertTo-Json -AsArray | Set-Content -Path "./api-list.json"
 
